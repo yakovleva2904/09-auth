@@ -10,7 +10,7 @@ export async function getServerMe(): Promise<User | null> {
   try {
     const cookieStore = await cookies();
 
-    const response = await api.get<User>('users/me', {
+    const response = await api.get<User>('/users/me', {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -27,7 +27,7 @@ export async function getServerNoteById(
 ): Promise<Note> {
   const cookieStore = await cookies();
 
-  const response = await api.get<Note>(`notes/${id}`, {
+  const response = await api.get<Note>(`/notes/${id}`, {
     headers: {
       Cookie: cookieStore.toString(),
     },
@@ -43,7 +43,7 @@ export async function getServerNotes(
 ) {
   const cookieStore = await cookies();
 
-  const response = await api.get('notes', {
+  const response = await api.get('/notes', {
     headers: {
       Cookie: cookieStore.toString(),
     },
@@ -61,7 +61,7 @@ export async function getServerNotes(
 export async function checkServerSession(): Promise<AxiosResponse> {
   const cookieStore = await cookies();
 
-  return api.get('auth/session', {
+  return api.get('/auth/session', {
     headers: {
       Cookie: cookieStore.toString(),
     },
