@@ -1,20 +1,26 @@
-'use client';
+import type { Metadata } from 'next';
 
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { useAuthStore } from '@/lib/store/authStore';
+import { getServerMe } from '@/lib/api/serverApi';
 
 import css from './ProfilePage.module.css';
 
-export default function ProfilePage() {
-  const user = useAuthStore(state => state.user);
+export const metadata: Metadata = {
+  title: 'Profile',
+  description: 'User profile page',
+};
+
+export default async function ProfilePage() {
+  const user = await getServerMe();
 
   if (!user) {
     return (
       <main className={css.mainContent}>
         <div className={css.profileCard}>
           <h1 className={css.formTitle}>Profile</h1>
+
           <p>User not found</p>
         </div>
       </main>
@@ -25,9 +31,14 @@ export default function ProfilePage() {
     <main className={css.mainContent}>
       <div className={css.profileCard}>
         <div className={css.header}>
-          <h1 className={css.formTitle}>Profile</h1>
+          <h1 className={css.formTitle}>
+            Profile
+          </h1>
 
-          <Link href="/profile/edit" className={css.editProfileButton}>
+          <Link
+            href="/profile/edit"
+            className={css.editProfileButton}
+          >
             Edit profile
           </Link>
         </div>

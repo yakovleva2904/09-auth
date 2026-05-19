@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { type AxiosResponse } from 'axios';
 import { cookies } from 'next/headers';
 
 import type { User } from '@/types/user';
@@ -51,4 +51,8 @@ export async function getServerNotes(
   });
 
   return response.data;
+}
+
+export async function checkServerSession(): Promise<AxiosResponse> {
+  return serverApi.get('/auth/session');
 }
