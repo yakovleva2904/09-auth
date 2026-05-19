@@ -1,38 +1,38 @@
-import axios, { type AxiosResponse } from 'axios';
+import { type AxiosResponse } from 'axios';
 import { cookies } from 'next/headers';
+
+import { api } from './api';
 
 import type { User } from '@/types/user';
 import type { Note } from '@/types/note';
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL + '/api';
-
-export const serverApi = axios.create({
-  baseURL,
-  withCredentials: true,
-});
-
-serverApi.interceptors.request.use(async (config) => {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
-
-  if (cookieHeader) {
-    config.headers.Cookie = cookieHeader;
-  }
-
-  return config;
-});
-
 export async function getServerMe(): Promise<User | null> {
   try {
-    const response = await serverApi.get<User>('/users/me');
+    const cookieStore = await cookies();
+
+    const response = await api.get<User>('users/me', {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+    });
+
     return response.data;
   } catch {
     return null;
   }
 }
 
-export async function getServerNoteById(id: string): Promise<Note> {
-  const response = await serverApi.get<Note>(`/notes/${id}`);
+export async function getServerNoteById(
+  id: string
+): Promise<Note> {
+  const cookieStore = await cookies();
+
+  const response = await api.get<Note>(`notes/${id}`, {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
+  });
+
   return response.data;
 }
 
@@ -41,7 +41,12 @@ export async function getServerNotes(
   page = 1,
   tag?: string
 ) {
-  const response = await serverApi.get('/notes', {
+  const cookieStore = await cookies();
+
+  const response = await api.get('notes', {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
     params: {
       search,
       page,
@@ -54,5 +59,11 @@ export async function getServerNotes(
 }
 
 export async function checkServerSession(): Promise<AxiosResponse> {
-  return serverApi.get('/auth/session');
+  const cookieStore = await cookies();
+
+  return api.get('auth/session', {
+    headers: {
+      Cookie: cookieStore.toString(),
+    },
+  });
 }
