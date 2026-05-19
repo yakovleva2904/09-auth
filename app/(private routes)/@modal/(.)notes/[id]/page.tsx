@@ -6,7 +6,7 @@ import {
 
 import Modal from "@/components/Modal/Modal";
 import NotePreview from "./NotePreview.client";
-import { fetchNoteById } from "@/lib/api";
+import { getServerNoteById } from '@/lib/api/serverApi';
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -19,7 +19,7 @@ export default async function NoteModalPage({ params }: Props) {
 
   await queryClient.prefetchQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNoteById(id),
+    queryFn: () => getServerNoteById(id),
   });
 
   return (
